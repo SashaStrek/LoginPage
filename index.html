@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header>
+    <img src="images/homeWorks.png" alt="logo">
+</header>
+<main class="main">
+    <div class="main__form">
+        <h1>Get your free account</h1>
+        <h2>Try homeWorks BUSINESS free for 15 days. Downgrade to Basic (Free Forever) anytime.</h2>
+        <div class="form">
+            <div class="form__item" id="FullNameItem">
+                <p>Full Name</p>
+                <input type="text" id="FullName" placeholder="Antony Swarowski">
+                <p class="error-message">please enter your Full Name</p>
+            </div>
+            <div class="form__item">
+                <p>Your username</p>
+                <input type="text" id="YourUsername">
+                <p class="error-message">please enter your Username</p>
+            </div>
+            <div class="form__item" id="EmailItem">
+                <p>E-mail</p>
+                <input type="text" id="Email">
+                <p class="error-message">please enter your E-mail</p>
+                <p class="error-message" id="EmailValidationErrorMessage">please enter correct E-mail</p>
+            </div>
+            <div class="form__item">
+                <p>Password</p>
+                <input type="text" id="Password">
+                <p class="error-message">please enter your Password</p>
+                <p class="error-message" id="PasswordValidationErrorMessage">password must contain at least 8 characters, including at least one uppercase letter, at least one number, at least one special character</p>
+            </div>
+            <div class="form__item" id="RepeatPasswordItem">
+                <p>Repeat Password</p>
+                <input type="text" id="RepeatPassword">
+                <p class="error-message">please repeat Password</p>
+            </div>
+            <label class="termsOfService" id="termsOfService">
+                <input type="checkbox" checked="checked" id="termsOfServiceCheckbox">
+                <span>Agree to our Terms of Service and Privacy Statement</span>
+                <p class="error-message">We need your consent to our Terms of Service and Privacy Statement</p>
+            </label>
+        </div>
+        <button type="button" class="btn" id="SignUpButton">Sign Up</button>
+        <a href="#" id="accountHref">Already have an account?</a>
+        <div class="popup" id="popup">
+            <div class="popup__window">
+                <h2>На вашу почту выслана ссылка, перейдите по ней, чтобы завершить регистрацию</h2>
+                <button class="btn OkButton" id="OkButton" type="button" >ОК</button>
+            </div>
+        </div>
+    </div>
+    <div class="main__image">
+        <img src="images/main-image.png" alt="image">
+    </div>
+</main>
+
+<script src="scripts/script.js"></script>
+</body>
+</html>
