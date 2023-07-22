@@ -11,8 +11,8 @@
 </header>
 <main class="main">
     <div class="main__form">
-        <h1>Get your free account</h1>
-        <h2>Try homeWorks BUSINESS free for 15 days. Downgrade to Basic (Free Forever) anytime.</h2>
+        <h1 id="mainHeader">Get your free account</h1>
+        <h2 id="headerText">Try homeWorks BUSINESS free for 15 days. Downgrade to Basic (Free Forever) anytime.</h2>
         <div class="form">
             <div class="form__item" id="FullNameItem">
                 <p>Full Name</p>
@@ -23,6 +23,7 @@
                 <p>Your username</p>
                 <input type="text" id="YourUsername">
                 <p class="error-message">please enter your Username</p>
+                <p class="error-message" id="wrongYourUsername">User not registered</p>
             </div>
             <div class="form__item" id="EmailItem">
                 <p>E-mail</p>
@@ -35,6 +36,7 @@
                 <input type="text" id="Password">
                 <p class="error-message">please enter your Password</p>
                 <p class="error-message" id="PasswordValidationErrorMessage">password must contain at least 8 characters, including at least one uppercase letter, at least one number, at least one special character</p>
+                <p class="error-message" id="wrongPassword">Wrong password</p>
             </div>
             <div class="form__item" id="RepeatPasswordItem">
                 <p>Repeat Password</p>

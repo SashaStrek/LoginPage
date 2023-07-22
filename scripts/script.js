@@ -28,72 +28,110 @@ window.onload = function () {
     let popup = document.getElementById('popup');
     let PasswordValidationErrorMessage = document.getElementById('PasswordValidationErrorMessage');
     let EmailValidationErrorMessage = document.getElementById('EmailValidationErrorMessage');
-
+    let inputs = document.getElementsByTagName("input");
     let reg_letters = /^[a-zA-Z\s]*$/;
     let reg_lettersAndNumbers = /^[\w-]*$/;
     let reg_email = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,})/;
     let reg_password = /((?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,})/;
-
-    FullName.onkeydown = (e) => {
-        if (!reg_letters.test(e.key)) {
-            return false;
-        }
-    }
-    YourUsername.onkeydown = (e) => {
-        if (!reg_lettersAndNumbers.test(e.key)) {
-            return false;
-        }
-    }
+    let errorMessages = document.querySelectorAll("p.error-message");
 
     function EmailValidation() {
         if (!reg_email.test(Email.value)) {
             EmailValidationErrorMessage.style.display = "block";
             return false;
-        }
-        else return true;
+        } else return true;
     }
+
     function PasswordValidation() {
         if (!reg_password.test(Password.value)) {
             PasswordValidationErrorMessage.style.display = "block";
             // alert('password must contain at least 8 characters, including at least one uppercase letter, at least one number, at least one special character')
             return false;
-        }
-        else return true;
+        } else return true;
     }
 
-    let inputs = document.getElementsByTagName("input");
-    function ResetInputsBorder(){
-        for(let i=0; i < inputs.length; i++) {
+    function ResetInputsBorder() {
+        for (let i = 0; i < inputs.length; i++) {
             inputs[i].style.borderBottom = "1px solid #C6C6C4";
         }
     }
-    function RedInputBorder(val){
+
+    function RedInputBorder(val) {
         val.style.borderBottom = "1px solid red";
     }
 
-    let errorMessages = document.querySelectorAll("p.error-message");
-    function hideErrorMessages(){
-        for(let i=0; i < errorMessages.length; i++) {
+    function hideErrorMessages() {
+        for (let i = 0; i < errorMessages.length; i++) {
             errorMessages[i].style.display = "none";
         }
     }
+
     function next(elem) {
         do {
             elem = elem.nextSibling;
         } while (elem && elem.nodeType !== 1);
         return elem;
     }
-    function showErrorMessage(val){
+
+    function showErrorMessage(val) {
         let nextElem = next(val);
         nextElem.style.display = "block";
     }
-    function showErrorMessage2(val){
+
+    function showErrorMessage2(val) {
         let nextNextElem = next(next(val));
         nextNextElem.style.display = "block";
     }
 
-    termsOfServiceCheckbox.onclick = () => {
-        termsOfServiceCheckbox.checked ? console.log('Согласен') : console.log('Не согласен');
+    function SignInValidation() {
+        hideErrorMessages();
+        ResetInputsBorder();
+        if (!YourUsername.value) {
+            RedInputBorder(YourUsername);
+            showErrorMessage(YourUsername);
+            return;
+        }
+        if (!Password.value) {
+            RedInputBorder(Password);
+            showErrorMessage(Password);
+            return;
+        }
+        let localClients = localStorage.getItem('clients');
+        let localClientsArray = JSON.parse(localClients);
+        let rightUsername = false;
+        let rightClient = false;
+        for (let i = 0; i < localClientsArray.length; i++) {
+            if (localClientsArray[i].Username == YourUsername.value && localClientsArray[i].Password == Password.value) {
+                rightClient = true;
+                console.log('rightClient = true');
+                break;
+            }
+            if (localClientsArray[i].Username == YourUsername.value && localClientsArray[i].Password !== Password.value) {
+                rightUsername = true;
+                break;
+            }
+        }
+        if (rightClient) {
+            document.getElementById('mainHeader').innerText = "Welcome, " + YourUsername.value + '!';
+            SignUpButton.innerText = "Exit";
+            document.getElementById('headerText').style.display = 'none';
+            YourUsername.style.display = 'none';
+            Password.style.display = 'none';
+            accountHref.style.display = 'none';
+            SignUpButton.removeEventListener("click", SignInValidation);
+            SignUpButton.addEventListener("click", goToRegistrationPage);
+            return;
+        }
+        console.log(rightUsername);
+        if (rightUsername) {
+            RedInputBorder(Password);
+            document.getElementById('wrongPassword').style.display = 'block';
+            return;
+        } else {
+            RedInputBorder(YourUsername);
+            document.getElementById('wrongYourUsername').style.display = 'block';
+            return;
+        }
     }
 
     function SignUpValidation() {
@@ -125,7 +163,6 @@ window.onload = function () {
         if (!PasswordValidation()) {
             return;
         }
-
         if (Password.value !== RepeatPassword.value) {
             RedInputBorder(RepeatPassword);
             showErrorMessage(RepeatPassword);
@@ -136,43 +173,65 @@ window.onload = function () {
             showErrorMessage2(termsOfServiceCheckbox);
             return;
         }
+        let newClient = {
+            FullName: FullName.value,
+            Username: YourUsername.value,
+            Email: Email.value,
+            Password: Password.value
+        };
+        let clients = localStorage.getItem('clients'); //хранилище как string
+        let clientsArray = [];
+        if (clients) { //если что то внутри есть
+            clientsArray = JSON.parse(clients);
+        }
+        clientsArray.push(newClient);
+        localStorage.setItem('clients', JSON.stringify(clientsArray));
+
+        SignUpButton.removeEventListener("click", SignUpValidation);
+        SignUpButton.addEventListener("click", SignInValidation);
+
+        console.log(localStorage);
 
         popup.classList.add("show");
     }
 
-    function SignInValidation() {
-        if (!YourUsername.value) {
-            alert('Заполните поле Your username');
-            return;
-        }
-        if (!Password.value) {
-            alert('Заполните поле Password');
-            return;
-        }
-        alert('Добро пожаловать, ' + YourUsername.value + '!')
+    function goToRegistrationPage() {
+        location.reload();
     }
 
     function createSignInForm() {
-        document.getElementsByTagName('h1')[0].innerText = "Log in to the system";
+        document.getElementById('mainHeader').innerText = "Log in to the system";
         document.getElementById('FullNameItem').style.display = 'none';
         document.getElementById('EmailItem').style.display = 'none';
         document.getElementById('RepeatPasswordItem').style.display = 'none';
         document.getElementById('termsOfService').style.display = 'none';
         SignUpButton.innerText = "Sign In";
-        accountHref.style.display = "none";
-
+        // accountHref.style.display = "none";
+        accountHref.innerHTML = "Registration";
+        accountHref.removeEventListener("click", createSignInForm);
+        accountHref.addEventListener("click", goToRegistrationPage);
         SignUpButton.removeEventListener("click", SignUpValidation);
         SignUpButton.addEventListener("click", SignInValidation);
     }
 
-
+    FullName.onkeydown = (e) => {
+        if (!reg_letters.test(e.key)) {
+            return false;
+        }
+    }
+    YourUsername.onkeydown = (e) => {
+        if (!reg_lettersAndNumbers.test(e.key)) {
+            return false;
+        }
+    }
+    termsOfServiceCheckbox.onclick = () => {
+        termsOfServiceCheckbox.checked ? console.log('Согласен') : console.log('Не согласен');
+    }
     SignUpButton.addEventListener("click", SignUpValidation);
-
     OkButton.addEventListener("click", function () {
         popup.classList.remove("show");
         createSignInForm();
     });
-
     accountHref.addEventListener("click", createSignInForm);
     console.log("success!");
 }
