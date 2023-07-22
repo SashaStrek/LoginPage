@@ -115,8 +115,8 @@ window.onload = function () {
             document.getElementById('mainHeader').innerText = "Welcome, " + YourUsername.value + '!';
             SignUpButton.innerText = "Exit";
             document.getElementById('headerText').style.display = 'none';
-            YourUsername.style.display = 'none';
-            Password.style.display = 'none';
+            document.getElementById('YourUsernameItem').style.display = 'none';
+            document.getElementById('PasswordItem').style.display = 'none';
             accountHref.style.display = 'none';
             SignUpButton.removeEventListener("click", SignInValidation);
             SignUpButton.addEventListener("click", goToRegistrationPage);
